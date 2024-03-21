@@ -8,6 +8,20 @@ function printBoard(board) {
     }
 }
 
+// Función para verificar si hay un ganador
+function checkWinner(board, player) {
+    // Verificar filas y columnas
+    for (let i = 0; i < 3; i++) {
+        if (board[i][0] === player && board[i][1] === player && board[i][2] === player) return true; // Filas
+        if (board[0][i] === player && board[1][i] === player && board[2][i] === player) return true; // Columnas
+    }
+
+    if (board[0][0] === player && board[1][1] === player && board[2][2] === player) return true; // Diagonal \
+    if (board[0][2] === player && board[1][1] === player && board[2][0] === player) return true; // Diagonal /
+    
+    return false;
+}
+
 // Función principal
 function main() {
     let board = [
@@ -34,8 +48,33 @@ function main() {
         if (board[row][col] === ' ') {
             board[row][col] = currentPlayer;
 
+            // Verificar si hay un ganador
+            if (checkWinner(board, currentPlayer)) {
+                console.clear();
+                printBoard(board);
+                console.log(`¡${currentPlayer} ha ganado!`);
+                break;
+            }
+
             // Cambiar al siguiente jugador
             currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+            // Verificar si el tablero está lleno (empate)
+            let isFull = true;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (board[i][j] === ' ') {
+                        isFull = false;
+                        break;
+                    }
+                }
+            }
+            if (isFull) {
+                console.clear();
+                printBoard(board);
+                console.log("¡El juego ha terminado en empate!");
+                break;
+            }
 
         } else {
             console.log("¡Casilla ocupada! Por favor, elige otra.");
